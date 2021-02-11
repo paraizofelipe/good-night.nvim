@@ -1,0 +1,36 @@
+# GET value in API
+GET http://localhost?foo=1&bar=2
+Header Content-type: application/json
+Header Authorization: Token _.token
+
+# POST value in API
+POST http://localhost
+Header Content-type: application/json
+Header Authorization: Token _.token
+Body {
+    "teste1": 1,
+    "teste2": 2
+}
+
+# Update value in API
+PATCH http://localhost?id=1
+Header Content-type: application/json
+Header Authorization: Token _.token
+Body {
+    "teste1": 1,
+    "teste2": 2
+}
+
+# Update value in API
+PUT http://localhost
+Header Content-type: application/json
+Header Authorization: Token _.token
+Body {
+    "teste1": 1,
+    "teste2": 2
+}
+
+# Delte value in API
+DELETE http://localhost?id=1
+Header Content-type: application/json
+Header Authorization: Token _.token
