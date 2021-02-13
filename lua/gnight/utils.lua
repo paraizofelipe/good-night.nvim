@@ -1,9 +1,9 @@
 local utils = {}
 
-utils.contains = function(list, value) 
+utils.contains = function(list, value)
 	for _, v in pairs(list) do
-        if v == value then 
-            return true 
+        if v == value then
+            return true
         end
     end
 

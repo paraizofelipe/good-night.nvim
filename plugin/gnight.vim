@@ -9,6 +9,7 @@ endfunction
 
 " command to run our plugin
 command! -range GNStart lua require'gnight'.GNStart()
+command! -range GNMakeRequest lua require'gnight'.GNMakeRequest()
 
 let &cpo = s:save_cpo " and restore after
 unlet s:save_cpo

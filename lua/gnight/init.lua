@@ -1,4 +1,5 @@
 local vim = vim
+local ui = require('gnight.ui')
 local utils = require('gnight.utils')
 
 local gnight = {
@@ -27,13 +28,21 @@ end
 
 gnight.build_command = function(request)
     local args = {
-        -- user = '-U ' .. gnight.connect.user,
-        -- pass = 'PGPASSWORD=' .. gnight.connect.password,
-        -- host = '-h ' .. gnight.connect.host,
-        -- database = '-d ' .. gnight.connect.database,
+        url = request.url,
+        method = '-X ' .. request.method,
+        headers = '',
+        body = '',
     }
 
-    -- local command = string.format("%s psql %s %s %s -c \"%s\"", args.pass, args.host, args.user, args.database, query)
+    if request.body ~= nil then
+        args.body = '-d' .. request.body
+    end
+
+    for _, header in pairs(request.header) do
+        args.headers = args.headers..' -H '..'"'..header..'"'
+    end
+
+    local command = string.format("curl -s -iL %s %s %s %s", args.method, args.url, args.headers, args.body)
     return command
 end
 
@@ -45,12 +54,13 @@ gnight.make_request = function(request)
 end
 
 gnight.build_request = function(lines)
-    request = {
+    local request = {
+        method = '',
         header = {},
     }
 
     for _, line in pairs(lines) do
-        params = utils.split(line, ' ')
+        local params = utils.split(line, ' ')
         if utils.contains(gnight.suported_methods, params[1]) then
             request.method = params[1]
             request.url = params[2]
@@ -68,14 +78,34 @@ gnight.build_request = function(lines)
     return request
 end
 
+gnight.set_mappings = function()
+    local mappings = {
+        r = 'GNMakeRequest()',
+    }
+
+    for k, f in pairs(mappings) do
+        vim.api.nvim_buf_set_keymap(0, 'n', k, ':lua require"gnight".'..f..'<cr>', {
+                nowait = true,
+                noremap = true,
+                silent = true
+            })
+    end
+end
+
 gnight.GNStart = function()
-    coordinates = gnight.motion(0)
-    lines = gnight.extract_lines(coordinates)
+    vim.api.nvim_command('edit ~/.gnight/requests.gnt')
+    gnight.set_mappings()
+end
 
-    request = gnight.build_request(lines)
-    print(vim.inspect(request))
-    gnight.make_request(request)
+gnight.GNMakeRequest = function()
 
+    local coordinates = gnight.motion(0)
+    local lines = gnight.extract_lines(coordinates)
+    local request = gnight.build_request(lines)
+    local response = gnight.make_request(request)
+
+    ui.show_win()
+    ui.redraw(response)
 end
 
 return gnight

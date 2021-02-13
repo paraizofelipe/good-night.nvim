@@ -1,3 +1,6 @@
+# Simplte test
+GET https://google.com.br
+
 # GET value in API
 GET http://localhost?foo=1&bar=2
 Header Content-type: application/json
