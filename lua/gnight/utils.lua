@@ -1,24 +1,24 @@
-local utils = {}
+local M = {}
 
-utils.contains = function(list, value)
-	for _, v in pairs(list) do
-        if v == value then
-            return true
-        end
-    end
-
-    return false
+M.file_exists = function(file)
+  local f = io.open(file, "rb")
+  if f then f:close() end
+  return f ~= nil
 end
 
-utils.split = function(inputstr, sep)
-    if sep == nil then
-            sep = "%s"
-    end
-    local t={}
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-            table.insert(t, str)
-    end
-    return t
+M.read_file = function(file)
+  if not M.file_exists(file) then return {} end
+  local lines = {}
+  for line in io.lines(file) do
+      table.insert(lines, line)
+  end
+  return lines
 end
 
-return utils
+M.tabular_line = function(line)
+    local tabulated_line
+    tabulated_line = vim.api.nvim_command("echo "..line.." | column -t ")
+    return tabulated_line
+end
+
+return M

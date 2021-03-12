@@ -10,7 +10,7 @@ syntax keyword gninghtMethodPut PUT
 
 syntax match gnightComment "\v#.*$"
 syntax match gnightLayers "\v^(Header|Body)"
-syntax match gnightVars "\v_.[a-z|A-Z|0-1]+"
+syntax match gnightVars "\v_\..[a-z|A-Z|0-1]+"
 syntax match gnightHeaderName "\v(Header\s)@<=(.+:)"
 
 highlight gn_get cterm=bold ctermfg=142 gui=bold guifg=#b8bb26
